@@ -35,7 +35,6 @@ public class ElkService {
     public Mono<IndexPatternSearch> getIndexPatterns() {
         return webClient.get()
                 .uri(urls.get("kibanaUrl") + "/api/saved_objects/_find?fields=title&fields=type&type=index-pattern&per_page=10000")
-//                .headers(header -> header.setBasicAuth("elastic", "IHGAjxDiUQUKQfJ4zzJx"))
                 .retrieve()
                 /*.onStatus(httpStatus -> HttpStatus.NOT_FOUND.equals(httpStatus),
                         clientResponse -> Mono.empty())*/
@@ -45,7 +44,6 @@ public class ElkService {
     public Flux<IndiciesCat> getIndexes() {
         return webClient.get()
                 .uri(urls.get("elasticUrl") +"/_cat/indices?format=json")
-//                .headers(header -> header.setBasicAuth("elastic", "IHGAjxDiUQUKQfJ4zzJx"))
                 .retrieve()
                 /*.onStatus(httpStatus -> HttpStatus.NOT_FOUND.equals(httpStatus),
                         clientResponse -> Mono.empty())*/
@@ -58,7 +56,6 @@ public class ElkService {
         webClient.post()
                 .uri(urls.get("kibanaUrl") +"/api/saved_objects/index-pattern/" + name)
                 .body(Mono.just(new IndexPatternRequest(new AttributesRequest(name + "*"))), IndexPatternRequest.class)
-//                .headers(header -> header.setBasicAuth("elastic", "IHGAjxDiUQUKQfJ4zzJx"))
                 .headers(header -> header.setContentType(MediaType.APPLICATION_JSON))
                 .headers(header -> header.set("kbn-xsrf", "true"))
                 .retrieve()
@@ -73,7 +70,6 @@ public class ElkService {
                 .uri(urls.get("elasticUrl") +"/_index_template/" + name)
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(header -> header.set("kbn-xsrf", "true"))
-//                .headers(header -> header.setBasicAuth("elastic", "IHGAjxDiUQUKQfJ4zzJx"))
                 .body(Mono.just(new TemplateRequest(name)), TemplateRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -85,7 +81,6 @@ public class ElkService {
         log.info("Lookup up fields for refresh for pattern: " + indexPatternStar);
         webClient.get()
                 .uri(urls.get("kibanaUrl") +"/api/index_patterns/_fields_for_wildcard?pattern=" + indexPatternStar + "&meta_fields=_source&meta_fields=_id&meta_fields=_type&meta_fields=_index&meta_fields=_score")
-//                .headers(header -> header.setBasicAuth("elastic", "IHGAjxDiUQUKQfJ4zzJx"))
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(prepareFields)
@@ -101,7 +96,6 @@ public class ElkService {
         log.info("Starting refresh: " + indexPattern);
         webClient.put()
                 .uri(urls.get("kibanaUrl") +"/api/saved_objects/index-pattern/" + indexPattern)
-//                .headers(header -> header.setBasicAuth("elastic", "IHGAjxDiUQUKQfJ4zzJx"))
                 .headers(header -> header.set("kbn-xsrf", "true"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(new IndexPatternRequest(new AttributesRequest(indexPattern + "*", fields))), IndexPatternRequest.class)
