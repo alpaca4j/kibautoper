@@ -13,15 +13,15 @@ public class Scheduler {
     @Autowired
     SetupService setupService;
 
-//    @Scheduled(fixedDelay = 60000)
-//    public void steupPatterns(){
-//        log.info("Starting task: Setup Index Patterns And Templates");
-//        setupService.setupIndexPatternsAndTemplates();
-//    }
-//
-//    @Scheduled(fixedDelay = 600000)
-//    public void refreshIndexPatterns(){
-//        log.info("Starting task: Refresh Index Patterns");
-//        setupService.rereshIndexPattern();
-//    }
+    @Scheduled(fixedDelay = 60000)
+    public void steupPatterns(){
+        log.info("Starting task: Setup Index Patterns And Templates");
+        setupService.setupIndexPatternsAndTemplates();
+    }
+
+    @Scheduled(fixedDelay = 600000)
+    public void refreshIndexPatterns(){
+        log.info("Starting task: Refresh Index Patterns");
+        setupService.rereshIndexPattern();
+    }
 }

@@ -1,10 +1,5 @@
 package io.badura.kibautoper.model.pattern;
 
-import java.util.HashMap;
-import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -40,12 +35,28 @@ public class AttributesRequest {
         this.fields = fields;
     }
 
-    public AttributesRequest(String title, String fields) {
-        this.title = title;
-        this.fields = fields;
+    @JsonProperty("timeFieldName")
+    private String timeFieldName;
+
+    @JsonProperty("timeFieldName")
+    public String getTimeFieldName() {
+        return timeFieldName;
+    }
+
+    @JsonProperty("timeFieldName")
+    public void setTimeFieldName(String timeFieldName) {
+        this.timeFieldName = timeFieldName;
     }
 
     public AttributesRequest(String title) {
         this.title = title;
+        this.timeFieldName="time";
     }
+
+    public AttributesRequest(String title, String fields) {
+        this.title = title;
+        this.fields = fields;
+        this.timeFieldName="time";
+    }
+
 }
