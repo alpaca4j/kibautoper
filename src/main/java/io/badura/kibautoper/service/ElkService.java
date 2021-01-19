@@ -32,6 +32,7 @@ public class ElkService {
     Properties urls;
 
 
+    //TODO private static final String dla "kibanaUrl" oraz "api/saved itd itd"
     public Mono<IndexPatternSearch> getIndexPatterns() {
         return webClient.get()
                 .uri(urls.get("kibanaUrl") + "/api/saved_objects/_find?fields=title&fields=type&type=index-pattern&per_page=10000")
