@@ -29,6 +29,7 @@ public class SetupService {
     String indexRegExPattern = "^(.*)(-+\\d\\d\\d\\d.\\d\\d.\\d\\d)$";
     Pattern pattern = Pattern.compile(indexRegExPattern);
 
+    //TODO literówka
     public void rereshIndexPattern() {
         final Flux<String> indexPatterns = this.getIndexPatterns();
         indexPatterns.filter(p -> p.endsWith("$"))
@@ -56,7 +57,7 @@ public class SetupService {
                 .map(IndiciesCat::getIndex)
                 .doOnNext(i -> log.info("Found index {}",i))
                 .map(prepareIndexName)
-                .filterWhen(t -> indexPatterns.hasElement(t).map(b->!b)) //Validate if pattern already exists, if not - continue
+                .filterWhen(t -> indexPatterns.hasElement(t).map(b->!b)) //Validate if pattern already exists, if not - continue // TODO Zrobić z tego predykat
                 .filter(isPatternNeeded())
                 .distinct()
                 .doOnNext(i -> log.info("Index for pattern creation selected {}", i))
@@ -68,6 +69,7 @@ public class SetupService {
      */
     Function<SavedObject, String> preparePatternName = savedObject -> {
         String patternName= savedObject.getAttributes().getTitle();
+        //TODO wywalić do funkcji
         if (!patternName.endsWith("*")) {
             return patternName;
         } else {
@@ -76,6 +78,7 @@ public class SetupService {
     };
 
     Function<String, String> prepareIndexName = indexName -> {
+        //For optimization - if doesn't contain "-" don't do regex
         if (!indexName.contains("-"))
             return indexName;
 
@@ -86,12 +89,16 @@ public class SetupService {
         return indexName;
     };
 
+
+    //TODO zmiana nazwy
     Predicate<String> isPatternNeeded() {
         return p ->
-                !p.startsWith(".") && // ommit system indicies
+                !p.startsWith(".") &&// ommit system indicies
+                !p.contains("%{[")   && //ommit not parsed indicies
                 p.endsWith("$"); // include only automatically created indeces
     }
 
+    //TODO wyciągnąć index template do metody wyżej, nie uzależniać tworzenia templatu od stworzonego patternu!
     private void creatingIngexPattern(String patternName) {
         elkService.createIndexPattern(patternName);
         elkService.createIndexTemplate(patternName);
