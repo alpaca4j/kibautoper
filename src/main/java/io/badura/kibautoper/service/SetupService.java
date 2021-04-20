@@ -93,7 +93,8 @@ public class SetupService {
     //TODO zmiana nazwy
     Predicate<String> isPatternNeeded() {
         return p ->
-                !p.startsWith(".") && // ommit system indicies
+                !p.startsWith(".") &&// ommit system indicies
+                !p.contains("%{[")   && //ommit not parsed indicies
                 p.endsWith("$"); // include only automatically created indeces
     }
 
